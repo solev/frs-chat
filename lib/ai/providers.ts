@@ -41,6 +41,6 @@ export const myProvider = isTestEnvironment
         'artifact-model': azure('gpt-4o'),
       },
       imageModels: {
-        'small-model': xai.image('grok-2-image'),
+        'small-model': azure.imageModel('dall-e-3'),
       },
     });
