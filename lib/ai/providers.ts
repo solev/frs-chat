@@ -4,6 +4,7 @@ import {
   wrapLanguageModel,
 } from 'ai';
 import { xai } from '@ai-sdk/xai';
+import { azure, createAzure } from '@ai-sdk/azure';
 import { isTestEnvironment } from '../constants';
 import {
   artifactModel,
@@ -11,6 +12,13 @@ import {
   reasoningModel,
   titleModel,
 } from './models.test';
+
+const azureThinking = createAzure({
+  resourceName: process.env.AZURE_THINKING_RESOURCE_NAME, // Azure resource name
+  apiKey: process.env.AZURE_THINKING_API_KEY, // Azure API key
+  apiVersion: '2025-01-01-preview', // Azure API version
+
+});
 
 export const myProvider = isTestEnvironment
   ? customProvider({
@@ -23,13 +31,14 @@ export const myProvider = isTestEnvironment
     })
   : customProvider({
       languageModels: {
-        'chat-model': xai('grok-2-1212'),
-        'chat-model-reasoning': wrapLanguageModel({
-          model: xai('grok-3-mini-beta'),
-          middleware: extractReasoningMiddleware({ tagName: 'think' }),
-        }),
-        'title-model': xai('grok-2-1212'),
-        'artifact-model': xai('grok-2-1212'),
+        'chat-model': azure('gpt-4o'),
+        // 'chat-model-reasoning': wrapLanguageModel({
+        //   model: xai('grok-3-mini-beta'),
+        //   middleware: extractReasoningMiddleware({ tagName: 'think' }),
+        // }),
+        'chat-model-reasoning': azure("o1-mini"),
+        'title-model': azure('gpt-4o'),
+        'artifact-model': azure('gpt-4o'),
       },
       imageModels: {
         'small-model': xai.image('grok-2-image'),
